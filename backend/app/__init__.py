@@ -1,6 +1,7 @@
 from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 import os
 
 # Initialize the database
@@ -15,6 +16,9 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'database.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # Enable CORS for all domains on all routes
+    CORS(app)
+
     # Ensure instance folder exists
     try:
         os.makedirs(app.instance_path)
@@ -24,6 +28,9 @@ def create_app():
     # Initialize database with app
     db.init_app(app)
     migrate.init_app(app, db)
+
+    # Import models to register them with SQLAlchemy
+    from app import models
 
     # Import and register routes
     from app.routes import main

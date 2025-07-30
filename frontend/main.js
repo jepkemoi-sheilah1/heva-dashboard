@@ -54,6 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+const backendBaseUrl = 'http://127.0.0.1:5000';
+
   // Fetch initial data from backend
   fetchFAQs();
   fetchPlatforms();
@@ -67,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (question && channel) {
       // POST new FAQ to backend
-      fetch('/faqs', {
+      fetch(`${backendBaseUrl}/faqs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: question, category: channel })
@@ -108,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function fetchFAQs() {
-    fetch('/faqs')
+    fetch(`${backendBaseUrl}/faqs`)
       .then(response => response.json())
       .then(data => {
         data.forEach(faq => {
@@ -128,10 +130,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function fetchPlatforms() {
-    fetch('/platforms')
+    fetch(`${backendBaseUrl}/platforms`)
       .then(response => response.json())
       .then(data => {
-        // Optionally handle platform data if needed
+        // Update platform usage counts based on active platforms
+        data.forEach(platform => {
+          if (platform.is_active && faqCounts.hasOwnProperty(platform.name)) {
+            faqCounts[platform.name]++;
+          }
+        });
+        updateCharts();
         console.log('Platforms:', data);
       })
       .catch(error => {
@@ -140,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function fetchAnalytics() {
-    fetch('/analytics')
+    fetch(`${backendBaseUrl}/analytics`)
       .then(response => response.json())
       .then(data => {
         // Optionally handle analytics data if needed

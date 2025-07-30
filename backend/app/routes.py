@@ -1,7 +1,25 @@
 from flask import Blueprint, request, jsonify, abort
 from app.models import db, User, Platform, Message, FAQ, Analytics, Settings
+from app.services import fetch_data_from_open_source_api
+
+from flask import Blueprint, request, jsonify, abort, send_from_directory
+from app.models import db, User, Platform, Message, FAQ, Analytics, Settings
+from app.services import fetch_data_from_open_source_api
+import os
 
 main = Blueprint('main', __name__)
+
+# Serve frontend index.html at root to fix 404 on /
+@main.route('/', methods=['GET'])
+def serve_index():
+    frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend'))
+    return send_from_directory(frontend_path, 'index.html')
+
+# Serve static files like main.css and main.js
+@main.route('/<path:filename>')
+def serve_static_files(filename):
+    frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend'))
+    return send_from_directory(frontend_path, filename)
 
 # User routes
 @main.route('/users', methods=['GET'])
@@ -109,3 +127,12 @@ def update_settings(user_id):
     settings.language = data.get('language', settings.language)
     db.session.commit()
     return jsonify({'message': 'Settings updated'})
+
+# New route to trigger data fetching from open source API
+@main.route('/fetch-data/<string:platform_name>/<int:user_id>', methods=['POST'])
+def fetch_data(platform_name, user_id):
+    success, message = fetch_data_from_open_source_api(platform_name, user_id)
+    if success:
+        return jsonify({'message': message})
+    else:
+        abort(500, description=message)

@@ -1,8 +1,10 @@
 from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 # Initialize the database
 db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__, static_folder='../frontend/static', template_folder='../frontend')
@@ -14,6 +16,7 @@ def create_app():
 
     # Initialize database with app
     db.init_app(app)
+    migrate.init_app(app, db)
 
     # Import and register routes
     from app.routes import main

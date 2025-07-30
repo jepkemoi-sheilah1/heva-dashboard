@@ -1,8 +1,8 @@
 from datetime import datetime
-from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from app import db
 
-db = SQLAlchemy()
+# db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -42,8 +42,8 @@ class Message(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     platform_id = db.Column(db.Integer, db.ForeignKey('platforms.id'), nullable=False)
 
-    user = db.relationship('User', backref='messages')
-    platform = db.relationship('Platform', backref='messages')
+    user = db.relationship('User', backref='messages', lazy=True)
+    platform = db.relationship('Platform', backref='messages', lazy=True)
 
     def __repr__(self):
         return f"<Message {self.id} | {self.direction} | {self.timestamp}>"
@@ -75,7 +75,7 @@ class Settings(db.Model):
     __tablename__ = 'settings'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     default_view = db.Column(db.String(50), default='inbox')
     theme = db.Column(db.String(20), default='light')
     notifications = db.Column(db.Boolean, default=True)

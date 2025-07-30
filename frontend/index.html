@@ -8,25 +8,70 @@
   <link rel="stylesheet" href="main.css">
 </head>
 <body>
+  <!-- widget floating chat bot -->
+<div id="chatbot-container">
+  <div id="chatbox">
+    <div id="messages"></div>
+    <input type="text" id="user-input" placeholder="Type a message..." />
+    <button id="send-btn">Send</button>
+  </div>
+</div>
+
 
 <div class="container-fluid">
   <div class="row">
     <!-- Sidebar -->
-    <nav class="col-md-2 bg-dark sidebar text-white p-3">
-      <h4 class="text-center">Chat Hub</h4>
-      <ul class="nav flex-column mt-4">
-        <li class="nav-item"><a class="nav-link text-white" href="#">📥 Inbox</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="#">📊 Analytics</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="#">📝 FAQ Form</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="#">⚙ Settings</a></li>
-      </ul>
-    </nav>
+      <nav class="col-md-2 bg-dark sidebar text-white p-3">
+        <h4 class="text-center">Chat Hub</h4>
+        <ul class="nav flex-column mt-4">
+          <li class="nav-item"><a class="nav-link text-white" href="#inbox">📥 Inbox</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#analyticsSummary">📊 Analytics</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#faqForm">📝 FAQ Form</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#settings">⚙ Settings</a></li>
+        </ul>
+      </nav>
 
     <!-- Main Content -->
     <main class="col-md-10 ms-sm-auto px-md-4 py-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Multi-Channel Dashboard</h2>
         <button class="btn btn-outline-primary">🔔 Notifications</button>
+      </div>
+
+      <!-- Analytics Summary -->
+      <div class="row mb-4" id="analyticsSummary">
+        <div class="col-md-3">
+          <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Total Messages</div>
+            <div class="card-body">
+              <h5 class="card-title" id="totalMessages">0</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-white bg-success mb-3">
+            <div class="card-header">Unique Users</div>
+            <div class="card-body">
+              <h5 class="card-title" id="uniqueUsers">0</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-white bg-info mb-3">
+            <div class="card-header">Avg Response Time (s)</div>
+            <div class="card-body">
+              <h5 class="card-title" id="avgResponseTime">0</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Most Active Platform</div>
+            <div class="card-body">
+              <h5 class="card-title" id="mostActivePlatform">N/A</h5>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Charts -->
@@ -50,7 +95,7 @@
       </div>
 
       <!-- FAQ Submission Form -->
-      <div class="card mb-4">
+      <div class="card mb-4" id="faqFormSection">
         <div class="card-header bg-info text-white">Submit a Question</div>
         <div class="card-body">
           <form id="faqForm">
@@ -76,13 +121,15 @@
       </div>
 
       <!-- FAQ List -->
-      <div class="card">
+      <div class="card" id="faqListSection">
         <div class="card-header bg-dark text-white">Frequently Asked Questions</div>
         <ul class="list-group list-group-flush" id="faqList">
           <!-- Dynamically added -->
         </ul>
       </div>
     </main>
+    <div id="inbox" style="height: 1px;"></div>
+    <div id="settings" style="height: 1px;"></div>
   </div>
 </div>
 

@@ -10,3 +10,32 @@ body {
 canvas {
   max-height: 300px;
 }
+
+/* Sidebar active link style */
+.sidebar .nav-link.active {
+  background-color: #0d6efd;
+  color: white !important;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+/* Notification container styles */
+#notificationContainer {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+/* Minimal styles */
+#chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  z-index: 999;
+}
+#chatbox {
+  background: blue;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  padding: 10px;
+}

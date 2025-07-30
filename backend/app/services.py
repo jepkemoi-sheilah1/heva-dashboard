@@ -7,7 +7,7 @@ def fetch_data_from_open_source_api(platform_name, user_id):
     Example function to fetch data from an open source API for a given platform
     and store the data in the database as Messages.
     """
-    # Example API endpoint for demonstration (replace with actual open source API)
+
     api_url = f"https://api.example.com/{platform_name}/data"
 
     try:

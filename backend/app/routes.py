@@ -136,3 +136,17 @@ def fetch_data(platform_name, user_id):
         return jsonify({'message': message})
     else:
         abort(500, description=message)
+
+    #route to chatbot
+
+
+@main.route('/chat', methods=['POST'])
+def chat():
+    data = request.get_json()
+    user_input = data.get('message')
+
+    
+    response = f"You said: {user_input}"
+
+    return jsonify({'response': response})
+

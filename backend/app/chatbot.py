@@ -34,11 +34,9 @@ def chat():
     if not user_input or user_input.lower() in ["hi", "hello", "hey", "start"]:
         return jsonify({"reply": WELCOME_MESSAGE})
 
-    # Direct replies for options 1–5
     if user_input in OPTION_REPLIES:
         return jsonify({"reply": OPTION_REPLIES[user_input]})
 
-    # Fallback to OpenAI for other inputs
     prompt = f"""
     You are a helpful, friendly chatbot for HEVA Fund, a creative finance facility in East Africa.
     You answer FAQs, explain HEVA’s funding products, list opportunities, and guide users.
@@ -57,6 +55,5 @@ def chat():
         )
         bot_reply = response.choices[0].text.strip()
         return jsonify({"reply": bot_reply})
-    
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"reply": f"Sorry, something went wrong: {str(e)}"}), 500

@@ -132,9 +132,17 @@
     <div id="settings" style="height: 1px;"></div>
   </div>
 </div>
+<script>
+  window.addEventListener("load", () => {
+    document.getElementById("messages").innerHTML += `
+      <div><strong>Bot:</strong> 👋 Hi!  Heva Support Bot.How can I assist you today?</div>
+    `;
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="main.js"></script>
+
 </body>
 </html>

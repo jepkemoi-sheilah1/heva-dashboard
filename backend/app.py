@@ -1,6 +1,8 @@
 from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from app.routes.chatbot import chatbot_bp
+
 
 # Initialize the database
 db = SQLAlchemy()
@@ -21,6 +23,8 @@ def create_app():
     # Import and register routes
     from app.routes import main
     app.register_blueprint(main)
+    app.register_blueprint(chatbot_bp, url_prefix='/api')
+
 
     # Serve frontend index.html at root
     @app.route('/')

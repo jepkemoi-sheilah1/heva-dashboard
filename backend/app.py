@@ -1,6 +1,7 @@
 from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 from app.routes.chatbot import chatbot_bp
 
 
@@ -19,6 +20,9 @@ def create_app():
     # Initialize database with app
     db.init_app(app)
     migrate.init_app(app, db)
+
+    # Enable CORS for all routes
+    CORS(app)
 
     # Import and register routes
     from app.routes import main

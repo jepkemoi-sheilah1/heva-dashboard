@@ -1,13 +1,20 @@
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, jsonify, abort, send_from_directory, render_template
 from app.models import db, User, Platform, Message, FAQ, Analytics, Settings
 from app.services import fetch_data_from_open_source_api
-
-from flask import Blueprint, request, jsonify, abort, send_from_directory
-from app.models import db, User, Platform, Message, FAQ, Analytics, Settings
-from app.services import fetch_data_from_open_source_api
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 main = Blueprint('main', __name__)
+
+# Serve admin register page
+@main.route('/admin/register', methods=['GET'])
+def serve_admin_register():
+    return render_template('admin_register.html')
+
+# Serve admin login page
+@main.route('/admin/login', methods=['GET'])
+def serve_admin_login():
+    return render_template('admin_login.html')
 
 # Serve frontend index.html at root to fix 404 on /
 @main.route('/', methods=['GET'])
@@ -20,6 +27,18 @@ def serve_index():
 def serve_static_files(filename):
     frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend'))
     return send_from_directory(frontend_path, filename)
+
+# Serve admin register page
+@main.route('/admin/register', methods=['GET'])
+def serve_admin_register():
+    frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend/templates'))
+    return send_from_directory(frontend_path, 'admin_register.html')
+
+# Serve admin login page
+@main.route('/admin/login', methods=['GET'])
+def serve_admin_login():
+    frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend/templates'))
+    return send_from_directory(frontend_path, 'admin_login.html')
 
 # User routes
 @main.route('/users', methods=['GET'])
@@ -137,16 +156,49 @@ def fetch_data(platform_name, user_id):
     else:
         abort(500, description=message)
 
-    #route to chatbot
-
-
+#route to chatbot
 @main.route('/chat', methods=['POST'])
 def chat():
     data = request.get_json()
     user_input = data.get('message')
 
-    
     response = f"You said: {user_input}"
 
     return jsonify({'response': response})
+
+# Admin registration route
+@main.route('/admin/register', methods=['POST'])
+def admin_register():
+    data = request.get_json()
+    if not data or not all(k in data for k in ('username', 'email', 'password')):
+        abort(400, description="Missing required fields")
+    username = data['username']
+    email = data['email']
+    password = data['password']
+
+    if User.query.filter((User.username == username) | (User.email == email)).first():
+        abort(400, description="User with this username or email already exists")
+
+    password_hash = generate_password_hash(password)
+    new_user = User(username=username, email=email, password_hash=password_hash, role='admin')
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'message': 'Admin registered successfully', 'user_id': new_user.id})
+
+# Admin login route
+@main.route('/admin/login', methods=['POST'])
+def admin_login():
+    data = request.get_json()
+    if not data or not all(k in data for k in ('username', 'password')):
+        abort(400, description="Missing required fields")
+    username = data['username']
+    password = data['password']
+
+    user = User.query.filter_by(username=username, role='admin').first()
+    if not user or not check_password_hash(user.password_hash, password):
+        abort(401, description="Invalid username or password")
+
+    # For simplicity, just return a success message and user info
+    return jsonify({'message': 'Login successful', 'user_id': user.id, 'username': user.username})
 
